@@ -18,7 +18,6 @@ export default function SignUp(){
         })
         console.log(response);
         navigate("/dashboard");
-        
     }
     return (
         <div className="h-screen w-screen flex justify-center items-center ">
