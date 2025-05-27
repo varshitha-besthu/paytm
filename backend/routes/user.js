@@ -20,11 +20,9 @@ userRouter.post("/signup", async(req, res) => {
             message: "Email already taken / Incorrect inputs"
         })
     }
-
     const existingUser = await User.findOne({
         username: req.body.username
     })
-
     if (existingUser) {
         return res.status(411).json({
             message: "Email already taken/Incorrect inputs"
@@ -42,17 +40,15 @@ userRouter.post("/signup", async(req, res) => {
     const account  = await Account.create({
         userId, balance : 1 + Math.random() * 10000
     })
-    const token = jwt.sign({
-        userId
-    }, JWT_SECRET);
+    
 
     res.json({
         token: token,
         message: "User created successfully",
         account : account
-        
     })
     
+
 })
 
 userRouter.post("/signin",async (req, res) => {
@@ -78,7 +74,7 @@ userRouter.post("/signin",async (req, res) => {
     const userId = existingUser._id;
 
     const token = jwt.sign({userId : userId}, JWT_SECRET);
-
+    res.cookie('token', token);
     res.status(200).json({
         token : token
     })
