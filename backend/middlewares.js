@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
     const authHeader = req.cookies.token;
+    console.log(req.cookies.token)
     if (!authHeader ) {
         return res.status(403).json({message : "there is not header"});
     }

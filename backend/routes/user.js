@@ -57,14 +57,12 @@ userRouter.post("/signin",async (req, res) => {
     const existingUser = await User.findOne({
         username: body.username
     })
-
     if(!existingUser){
         res.status(411).json({
             message : "User doesn't exists"
         })
         return;
     }
-
     if(existingUser.password != body.password){
         res.status(411).json({
             message : "Password is wrong"
@@ -74,7 +72,7 @@ userRouter.post("/signin",async (req, res) => {
     const userId = existingUser._id;
 
     const token = jwt.sign({userId : userId}, JWT_SECRET);
-    res.cookie('token', token);
+    res.cookie("token", token, {sameSite: 'none', secure : true});
     res.status(200).json({
         token : token
     })
@@ -100,16 +98,21 @@ userRouter.put("/",authMiddleware, async (req, res) => {
 
 })
 
+userRouter.get("/info", authMiddleware, async(req, res) => {
+    const  user = await User.findOne({_id: req.userId});
+    res.json({
+        user : user
+    })
+})
+
 userRouter.get("/bulk", authMiddleware, async(req, res) => {
     const name = req.query.filter || "";
-
     const users = await User.find({
         $or:[
             {'firstName' : {"$regex" : name}},
             {"lastName" : {"$regex" : name}}
         ]
     })
-
      res.json({
         user: users.map(user => ({
             username: user.username,

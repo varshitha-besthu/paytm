@@ -4,16 +4,22 @@ const { Account } = require("../db");
 const { default: mongoose } = require("mongoose");
 const accountRouter = express.Router();
 
-accountRouter.get("/balance",authMiddleware, async (req, res) => {
+accountRouter.get("/balance", authMiddleware, async (req, res) => {
     const account = await Account.findOne({userId: req.userId});
+    if(!account){
+        res.json({
+            message : "Invalid account",
+            
+        })
+        return;
+    }
     res.json({
         balance : account.balance
     })
 })
 
 accountRouter.post("/transfer", authMiddleware, async (req, res) => {
-    let amount = Number(req.body.amount);
-    const { to } = req.body;
+    const {amount, to} = req.body;
 
     if (!amount || amount <= 0 || !to) {
         return res.status(400).json({ message: "Invalid input" });
