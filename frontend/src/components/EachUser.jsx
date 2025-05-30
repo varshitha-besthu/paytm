@@ -1,25 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import User from "../Icons/User";
 import Button from "./Button";
 import SendMoney from "./SendMoney";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { UserAtom } from "../store/atoms";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { money } from "../store/money";
 
-export default function EachUser(){
-    const [sendMoney, setSendMoney] = useRecoilState(UserAtom);
-    const handleOnClick = () => {
-           setSendMoney(money => !money);
+export default function EachUser({ firstName, lastName, Id }) {
+  const navigate = useNavigate();
+  const [send, setSend] = useState(false);
+  const [transfer, setTransfer] = useRecoilState(money);
+  const handleOnClick = () => {
+    setTransfer({ Id: Id, name: firstName, amount: 0 });
+    setSend(!send);
+  };
+
+  useEffect(() => {
+    if (send) {
+      navigate("/sendMoney");
     }
-    if(sendMoney){
-        return <SendMoney />
-    }
-    return <div className="flex justify-between mt-8">
-        <div className="flex">
-            <div><User /></div>
-            <div className="font-bold text-2xl ml-4">User 1</div>
-        </div>
+
+  }, [send]);
+
+  return (
+    <div className="flex justify-between mt-8">
+      <div className="flex">
         <div>
-            <Button label={"Send Money"} onclick={handleOnClick}/>
+          <User />
         </div>
+        <div className="font-bold text-2xl ml-4">
+          {firstName} {lastName}
+        </div>
+      </div>
+      <div>
+        <Button label={"Send Money"} onclick={handleOnClick} />
+      </div>
     </div>
+  );
 }

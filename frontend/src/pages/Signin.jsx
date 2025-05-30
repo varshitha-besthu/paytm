@@ -12,14 +12,14 @@ export default function Signin(){
         const resposne = await axios.post("http://localhost:3000/api/v1/user/signin", {
             username,
             password
-        })
+        }, {withCredentials : true})
         console.log(resposne);
         navigate("/dashboard");
     }
     return (
         <div className="h-screen w-screen flex justify-center items-center ">
             <div className="border-2 border-gray-400 p-4 rounded-2xl ">
-                <div className="font-bold text-2xl flex justify-center mb-2">Sign Up</div>
+                <div className="font-bold text-2xl flex justify-center mb-2">Sign In</div>
                 <div className="text-slate-500 text-md pt-1 px-4 pb-4">Enter your credentials to access your account</div>
                 
                 <div className="my-2">
